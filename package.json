@@ -1,0 +1,43 @@
+{
+  "name": "reciclomap",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Plataforma que conecta recicladores, centros de acopio y compradores móviles.",
+  "type": "module",
+  "packageManager": "pnpm@11.22.0",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "tipos": "turbo run tipos",
+    "test": "turbo run test",
+    "formato": "prettier --write apps packages docs .github \"*.{json,md,mjs,yml}\"",
+    "formato:revisar": "prettier --check apps packages docs .github \"*.{json,md,mjs,yml}\"",
+    "servicios:levantar": "docker compose up -d --wait",
+    "servicios:detener": "docker compose down",
+    "db:preparar": "pnpm --filter @reciclomap/api db:preparar",
+    "db:migrar": "pnpm --filter @reciclomap/api db:migrar",
+    "db:sembrar": "pnpm --filter @reciclomap/api db:sembrar",
+    "db:reiniciar": "pnpm --filter @reciclomap/api db:reiniciar",
+    "admin:crear": "pnpm --filter @reciclomap/api admin:crear",
+    "db:probar": "pnpm --filter @reciclomap/api test:bd",
+    "api:e2e": "pnpm --filter @reciclomap/api test:e2e",
+    "api:postman": "pnpm --filter @reciclomap/api postman",
+    "web:e2e": "pnpm --filter @reciclomap/web test:e2e",
+    "web:peso": "pnpm --filter @reciclomap/web peso",
+    "web:flujos": "pnpm --filter @reciclomap/web test:flujos"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "~10.14.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.14.0",
+    "prettier": "^3.10.1",
+    "turbo": "^2.11.11",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.2"
+  }
+}

@@ -1,0 +1,70 @@
+name: reciclomap
+
+services:
+  db:
+    image: ${DB_IMAGEN:-postgis/postgis:16-3.5}
+    platform: ${DB_PLATAFORMA:-linux/amd64}
+    container_name: reciclomap-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_PROPIETARIO:-reciclomap}
+      POSTGRES_PASSWORD: ${DB_PROPIETARIO_CLAVE:?Falta DB_PROPIETARIO_CLAVE en el archivo .env}
+      POSTGRES_DB: ${DB_NOMBRE:-reciclomap}
+      TZ: America/Lima
+    ports:
+      - '${DB_PUERTO:-5433}:5432'
+    volumes:
+      - reciclomap_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_PROPIETARIO:-reciclomap} -d ${DB_NOMBRE:-reciclomap}']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    container_name: reciclomap-redis
+    restart: unless-stopped
+    ports:
+      - '${REDIS_PUERTO:-6380}:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  correo:
+    image: axllent/mailpit:latest
+    container_name: reciclomap-correo
+    restart: unless-stopped
+    ports:
+      - '${CORREO_PUERTO_SMTP:-1025}:1025'
+      - '${CORREO_PUERTO_WEB:-8025}:8025'
+
+  # Almacén de fotos compatible con S3; las claves salen del archivo .env
+  almacen:
+    image: chrislusf/seaweedfs:3.97
+    container_name: reciclomap-almacen
+    restart: unless-stopped
+    environment:
+      CLAVE_ACCESO: ${ALMACEN_CLAVE_ACCESO:?Falta ALMACEN_CLAVE_ACCESO en el archivo .env}
+      CLAVE_SECRETA: ${ALMACEN_CLAVE_SECRETA:?Falta ALMACEN_CLAVE_SECRETA en el archivo .env}
+    entrypoint: ['/bin/sh', '-c']
+    command:
+      - >-
+        printf '{"identities":[{"name":"api","credentials":[{"accessKey":"%s","secretKey":"%s"}],"actions":["Admin","Read","Write","List","Tagging"]}]}'
+        "$$CLAVE_ACCESO" "$$CLAVE_SECRETA" > /tmp/s3.json
+        && exec weed server -dir=/data -volume.max=0 -s3 -s3.port=8333 -s3.config=/tmp/s3.json
+    ports:
+      - '${ALMACEN_PUERTO:-8333}:8333'
+    volumes:
+      - reciclomap_almacen:/data
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -q -O /dev/null http://127.0.0.1:8333/healthz']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  reciclomap_db:
+  reciclomap_almacen:

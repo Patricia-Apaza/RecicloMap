@@ -1,0 +1,126 @@
+name: Integración continua
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  TURBO_TELEMETRY_DISABLED: 1
+  NODE_ENV: test
+  DB_HOST: localhost
+  DB_PUERTO: 5432
+  DB_NOMBRE: reciclomap
+  DB_NOMBRE_PRUEBAS: reciclomap_pruebas
+  DB_PROPIETARIO: reciclomap
+  DB_PROPIETARIO_CLAVE: clave_solo_para_ci
+  DB_API_CLAVE: clave_api_solo_para_ci
+  DB_ADMIN_CLAVE: clave_admin_solo_para_ci
+  API_PUERTO: 3001
+  WEB_ORIGEN: http://localhost:3000
+
+jobs:
+  calidad:
+    name: Formato, lint, tipos y pruebas unitarias
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm formato:revisar
+      - run: pnpm lint
+      - run: pnpm tipos
+      - run: pnpm test
+      - run: pnpm build
+
+  base-datos-y-api:
+    name: Base de datos, extremo a extremo y Postman
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgis/postgis:16-3.5
+        env:
+          POSTGRES_USER: reciclomap
+          POSTGRES_PASSWORD: clave_solo_para_ci
+          POSTGRES_DB: reciclomap
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U reciclomap -d reciclomap"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm db:preparar
+      - run: pnpm db:probar
+      - run: pnpm api:e2e
+      - name: Preparar la base de desarrollo
+        run: pnpm db:reiniciar
+      - run: pnpm build
+      - name: Arrancar la API
+        run: |
+          NODE_ENV=development MENSAJERIA_PROVEEDOR=memoria MENSAJERIA_EXPONER_CODIGO=true ALMACEN_PROVEEDOR=memoria \
+            node apps/api/dist/main.js > api.log 2>&1 &
+          for intento in $(seq 1 30); do
+            curl -sf http://localhost:3001/api/v1/salud/listo && exit 0
+            sleep 2
+          done
+          cat api.log
+          exit 1
+      - run: pnpm api:postman
+      - name: Instalar el navegador de los flujos
+        run: pnpm --filter @reciclomap/web exec playwright install --with-deps chromium
+      # Registro, verificación y aprobación de punta a punta, a 360 px y en escritorio, contra la base de pruebas
+      - run: pnpm web:flujos
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: informe-flujos
+          path: apps/web/playwright-report-flujos
+          retention-days: 7
+
+  web:
+    name: Web a 360 px y escritorio, y peso de las páginas
+    runs-on: ubuntu-latest
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+      # La guía interna de componentes solo se incluye en esta compilación de pruebas
+      RM_PAGINAS_INTERNAS: 1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Instalar el navegador de las pruebas
+        run: pnpm --filter @reciclomap/web exec playwright install --with-deps chromium
+      - run: pnpm build --filter @reciclomap/web...
+      - run: pnpm web:e2e
+      - name: Medir el peso de las páginas
+        run: pnpm web:peso
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: informe-playwright
+          path: apps/web/playwright-report
+          retention-days: 7
