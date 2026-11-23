@@ -1,0 +1,1686 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generado/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Enumeraciones
+enum Rol {
+  RECICLADOR
+  CENTRO
+  COMPRADOR_MOVIL
+  ADMIN
+
+  @@map("rol")
+}
+
+enum UsuarioEstado {
+  PENDIENTE_TELEFONO
+  REGISTRO_INCOMPLETO
+  ACTIVO
+  SUSPENDIDO
+  EN_ELIMINACION
+  ELIMINADO
+
+  @@map("usuario_estado")
+}
+
+enum ProveedorIdentidad {
+  GOOGLE
+
+  @@map("proveedor_identidad")
+}
+
+enum PropositoCodigo {
+  VERIFICAR_TELEFONO
+  RECUPERAR_CONTRASENA
+  CAMBIAR_TELEFONO
+  INICIO_ADMIN
+  ELIMINAR_CUENTA
+  CONFIRMAR_ACCION
+
+  @@map("proposito_codigo")
+}
+
+enum TipoConsentimiento {
+  TERMINOS
+  PRIVACIDAD
+  UBICACION
+  MAYOR_EDAD
+
+  @@map("tipo_consentimiento")
+}
+
+enum PropositoArchivo {
+  PERFIL
+  NEGOCIO
+  PUBLICACION
+
+  @@map("proposito_archivo")
+}
+
+enum CiudadEstado {
+  ACTIVA
+  PROXIMAMENTE
+
+  @@map("ciudad_estado")
+}
+
+enum CompradorTipo {
+  CENTRO
+  MOVIL
+
+  @@map("comprador_tipo")
+}
+
+enum Vehiculo {
+  MOTO
+  TRICICLO
+  CAMIONETA
+  CAMION
+
+  @@map("vehiculo")
+}
+
+enum Plan {
+  GRATIS
+  PRO
+
+  @@map("plan")
+}
+
+enum VerificacionEstado {
+  EN_REVISION
+  INFO_PEDIDA
+  APROBADO
+  RECHAZADO
+
+  @@map("verificacion_estado")
+}
+
+enum VerificacionTipo {
+  REGISTRO
+  CAMBIO_DIRECCION
+
+  @@map("verificacion_tipo")
+}
+
+enum Disponibilidad {
+  DISPONIBLE
+  EN_RUTA
+  FUERA_DE_SERVICIO
+
+  @@map("disponibilidad")
+}
+
+enum MetodoPago {
+  EFECTIVO
+  YAPE
+  PLIN
+  TRANSFERENCIA
+
+  @@map("metodo_pago")
+}
+
+enum Demanda {
+  ALTA
+  MEDIA
+  BAJA
+
+  @@map("demanda")
+}
+
+enum ModeracionEstado {
+  SOSPECHOSO
+  CORRECCION_PEDIDA
+  SUSPENDIDO
+
+  @@map("moderacion_estado")
+}
+
+enum PublicacionEstado {
+  DISPONIBLE
+  CON_OFERTAS
+  EN_NEGOCIACION
+  FINALIZADA
+  CANCELADA
+  VENCIDA
+
+  @@map("publicacion_estado")
+}
+
+enum OrigenUbicacion {
+  GPS
+  ZONA
+
+  @@map("origen_ubicacion")
+}
+
+enum OfertaEstado {
+  PENDIENTE
+  ACEPTADA
+  RECHAZADA
+  NO_SELECCIONADA
+  RETIRADA
+
+  @@map("oferta_estado")
+}
+
+enum OperacionEstado {
+  ACEPTADA
+  EN_COORDINACION
+  ENTREGADA
+  CONFIRMADA
+  COMPLETADA
+  CANCELADA
+
+  @@map("operacion_estado")
+}
+
+enum PuntoEncuentroTipo {
+  LOCAL_DEL_CENTRO
+  REFERENCIA
+
+  @@map("punto_encuentro_tipo")
+}
+
+enum Franja {
+  MANANA
+  TARDE
+  NOCHE
+
+  @@map("franja")
+}
+
+enum DestinoCalificacion {
+  NEGOCIO
+  RECICLADOR
+
+  @@map("destino_calificacion")
+}
+
+enum RegistroEstado {
+  PENDIENTE
+  CONFIRMADO
+  RECHAZADO
+  VENCIDO
+
+  @@map("registro_estado")
+}
+
+enum ReporteTipo {
+  NEGOCIO
+  OPERACION
+  RESENA
+
+  @@map("reporte_tipo")
+}
+
+enum ReporteMotivo {
+  PRECIO
+  CERRADO
+  UBICACION
+  FALSA
+  OTRO
+  NO_LLEGO
+  PESO
+  PAGO
+  TRATO
+  NO_CONFIRMA
+  NO_CONFORME
+  RESENA_INAPROPIADA
+
+  @@map("reporte_motivo")
+}
+
+enum ReporteEstado {
+  PENDIENTE
+  EN_REVISION
+  CORRECCION_PEDIDA
+  RESUELTO
+  DESCARTADO
+
+  @@map("reporte_estado")
+}
+
+enum ResolucionIncidencia {
+  KILOS_CORREGIDOS
+  CERRADA_CON_KILOS_VIGENTES
+  ANULADA
+
+  @@map("resolucion_incidencia")
+}
+
+enum AvisoEstado {
+  ACTIVO
+  OCULTO
+
+  @@map("aviso_estado")
+}
+
+enum AvisoTipo {
+  PROMOCION
+  ANUNCIO
+  NECESIDAD
+  CAMPANA
+
+  @@map("aviso_tipo")
+}
+
+enum NotificacionTipo {
+  OFERTA
+  ACEPTACION
+  OPERACION
+  DESAFIO
+  GIRO
+  PRECIO
+  AVISO
+  CONFIRMACION
+  INSIGNIA
+  NIVEL
+  PLAN
+  CUENTA
+
+  @@map("notificacion_tipo")
+}
+
+enum InsigniaCategoria {
+  KILOS
+  CONSTANCIA
+  CALIDAD
+  PRECIO
+  COMUNIDAD
+  JUEGO
+
+  @@map("insignia_categoria")
+}
+
+enum DesafioTipo {
+  KG_TOTAL
+  KG_MATERIAL
+  OPERACIONES
+  OPERACIONES_MATERIAL
+  CALIFICACIONES
+  DIAS_PUBLICANDO
+
+  @@map("desafio_tipo")
+}
+
+enum PuntosMotivo {
+  OPERACION
+  REGISTRO_DIRECTO
+  DESAFIO
+  INVITACION
+  RULETA
+  CORRECCION
+
+  @@map("puntos_motivo")
+}
+
+enum GiroOrigen {
+  PUNTOS
+  META_MES
+
+  @@map("giro_origen")
+}
+
+enum PremioTipo {
+  PUNTOS
+  OBJETO
+  SIN_PREMIO
+
+  @@map("premio_tipo")
+}
+
+enum PremioGanadoEstado {
+  POR_RECLAMAR
+  RECLAMADO
+  ENTREGADO
+  VENCIDO
+  RENUNCIADO
+
+  @@map("premio_ganado_estado")
+}
+
+enum MedioPagoPlan {
+  YAPE
+  EFECTIVO
+
+  @@map("medio_pago_plan")
+}
+
+enum SolicitudPlanEstado {
+  PENDIENTE
+  APROBADA
+  RECHAZADA
+  CANCELADA
+
+  @@map("solicitud_plan_estado")
+}
+
+enum AuditoriaTipo {
+  AVISOS
+  VERIFICACION
+  PRECIOS
+  USUARIOS
+  REPORTES
+  PLAN
+  PARAMETROS
+  PREMIOS
+  CIUDADES
+  CONFIGURACION
+
+  @@map("auditoria_tipo")
+}
+
+// Único resultado posible de las funciones de distancia: nunca un número
+enum TramoDistancia {
+  MENOS_DE_1_KM @map("menos de 1 km")
+  DE_1_A_2_KM   @map("1–2 km")
+  DE_2_A_5_KM   @map("2–5 km")
+  MAS_DE_5_KM   @map("más de 5 km")
+
+  @@map("tramo_distancia")
+}
+
+// Catálogos
+model Ciudad {
+  id                     Int          @id @default(autoincrement()) @db.SmallInt
+  nombre                 String       @unique @db.VarChar(60)
+  region                 String       @db.VarChar(60)
+  estado                 CiudadEstado @default(PROXIMAMENTE)
+  verificadoresAsignados Boolean      @default(false) @map("verificadores_asignados")
+  preciosBaseCargados    Boolean      @default(false) @map("precios_base_cargados")
+  creadaEn               DateTime     @default(now()) @map("creada_en") @db.Timestamptz(3)
+
+  zonas         Zona[]
+  usuarios      Usuario[]
+  publicaciones Publicacion[]
+  listaEspera   ListaEsperaCiudad[]
+
+  @@map("ciudad")
+}
+
+model Zona {
+  id       Int                                  @id @default(autoincrement()) @db.SmallInt
+  ciudadId Int                                  @map("ciudad_id") @db.SmallInt
+  nombre   String                               @db.VarChar(80)
+  centro   Unsupported("geography(Point,4326)")
+
+  ciudad       Ciudad             @relation(fields: [ciudadId], references: [id])
+  compradores  Comprador[]
+  recicladores RecicladorPerfil[]
+  paradas      ParadaRuta[]
+
+  @@unique([ciudadId, nombre])
+  @@index([centro], type: Gist)
+  @@map("zona")
+}
+
+model ListaEsperaCiudad {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ciudadId  Int       @map("ciudad_id") @db.SmallInt
+  usuarioId String?   @map("usuario_id") @db.Uuid
+  creadaEn  DateTime  @default(now()) @map("creada_en") @db.Timestamptz(3)
+  avisadaEn DateTime? @map("avisada_en") @db.Timestamptz(3)
+
+  ciudad  Ciudad   @relation(fields: [ciudadId], references: [id])
+  usuario Usuario? @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([ciudadId, usuarioId])
+  @@map("lista_espera_ciudad")
+}
+
+model Material {
+  id     Int    @id @default(autoincrement()) @db.SmallInt
+  codigo String @unique @db.VarChar(20)
+  nombre String @unique @db.VarChar(40)
+  orden  Int    @db.SmallInt
+
+  recicladores  RecicladorMaterial[]
+  precios       PrecioMaterial[]
+  publicaciones Publicacion[]
+  registros     RegistroReciclaje[]
+  reportes      Reporte[]
+  plantillas    PlantillaDesafio[]
+  solicitudes   SolicitudLlegada[]
+  visitas       EventoVisita[]
+
+  @@map("material")
+}
+
+model Nivel {
+  id     Int     @id @db.SmallInt
+  nombre String  @unique @db.VarChar(40)
+  kgMin  Decimal @unique @map("kg_min") @db.Decimal(10, 2)
+
+  perfiles RecicladorPerfil[]
+
+  @@map("nivel")
+}
+
+model Insignia {
+  id          Int               @id @default(autoincrement()) @db.SmallInt
+  codigo      String            @unique @db.VarChar(40)
+  nombre      String            @unique @db.VarChar(40)
+  categoria   InsigniaCategoria
+  descripcion String            @db.VarChar(160)
+  meta        Int
+  unidad      String            @db.VarChar(20)
+  destacada   Boolean           @default(false)
+  orden       Int               @db.SmallInt
+
+  usuarios UsuarioInsignia[]
+
+  @@map("insignia")
+}
+
+model EtiquetaCalificacion {
+  id      Int                 @id @default(autoincrement()) @db.SmallInt
+  destino DestinoCalificacion
+  codigo  String              @db.VarChar(40)
+  nombre  String              @db.VarChar(40)
+  activa  Boolean             @default(true)
+
+  calificaciones CalificacionEtiqueta[]
+
+  @@unique([destino, codigo])
+  @@map("etiqueta_calificacion")
+}
+
+model ParametroRegla {
+  clave        String  @id @db.VarChar(60)
+  minimo       Decimal
+  maximo       Decimal
+  costoPremios Boolean @default(false) @map("costo_premios")
+
+  @@map("parametro_regla")
+}
+
+model ParametroHistorial {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clave         String   @db.VarChar(60)
+  valorAnterior String   @map("valor_anterior") @db.VarChar(200)
+  valorNuevo    String   @map("valor_nuevo") @db.VarChar(200)
+  motivo        String   @db.VarChar(200)
+  adminId       String   @map("admin_id") @db.Uuid
+  txId          BigInt   @default(dbgenerated("txid_current()")) @map("tx_id")
+  creadoEn      DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  admin Usuario @relation("ParametroCambiadoPor", fields: [adminId], references: [id])
+
+  @@index([clave, creadoEn])
+  @@map("parametro_historial")
+}
+
+model Parametro {
+  clave         String   @id @db.VarChar(60)
+  valor         String   @db.VarChar(200)
+  descripcion   String   @db.VarChar(200)
+  actualizadoEn DateTime @default(now()) @map("actualizado_en") @db.Timestamptz(3)
+
+  @@map("parametro")
+}
+
+// Cuentas
+model Usuario {
+  id                   String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  rol                  Rol
+  nombre               String        @db.VarChar(120)
+  telefono             String        @unique @db.Char(9)
+  telefonoVerificadoEn DateTime?     @map("telefono_verificado_en") @db.Timestamptz(3)
+  correo               String?       @unique @db.VarChar(120)
+  correoVerificadoEn   DateTime?     @map("correo_verificado_en") @db.Timestamptz(3)
+  hashContrasena       String?       @map("hash_contrasena") @db.VarChar(255)
+  fotoId               String?       @unique @map("foto_id") @db.Uuid
+  ciudadId             Int           @map("ciudad_id") @db.SmallInt
+  estado               UsuarioEstado @default(PENDIENTE_TELEFONO)
+  motivoSuspension     String?       @map("motivo_suspension") @db.VarChar(200)
+  suspendidoEn         DateTime?     @map("suspendido_en") @db.Timestamptz(3)
+  suspendidoPorId      String?       @map("suspendido_por_id") @db.Uuid
+  creadoEn             DateTime      @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn        DateTime      @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  eliminadoEn          DateTime?     @map("eliminado_en") @db.Timestamptz(3)
+  eliminacionSolicitadaEn DateTime?  @map("eliminacion_solicitada_en") @db.Timestamptz(3)
+  eliminacionProgramadaEn DateTime?  @map("eliminacion_programada_en") @db.Timestamptz(3)
+  fallosAcceso         Int           @default(0) @map("fallos_acceso") @db.SmallInt
+  accesoBloqueadoHasta DateTime?     @map("acceso_bloqueado_hasta") @db.Timestamptz(3)
+
+  ciudad              Ciudad               @relation(fields: [ciudadId], references: [id])
+  foto                Archivo?             @relation("FotoPerfil", fields: [fotoId], references: [id], onDelete: SetNull)
+  suspendidoPor       Usuario?             @relation("CuentasSuspendidas", fields: [suspendidoPorId], references: [id], onDelete: SetNull)
+  suspendidas         Usuario[]            @relation("CuentasSuspendidas")
+  avisosOcultados     Aviso[]              @relation("AvisosOcultados")
+  parametrosCambiados ParametroHistorial[] @relation("ParametroCambiadoPor")
+
+  sesiones                 Sesion[]
+  codigos                  CodigoVerificacion[]
+  identidades              IdentidadExterna[]
+  consentimientos          Consentimiento[]
+  registrosPrivacidad      RegistroPrivacidad[]
+  exportaciones            ExportacionDatos[]
+  archivos                 Archivo[]             @relation("ArchivosPropios")
+  preferencia              PreferenciaUsuario?
+  suscripcionesPush        SuscripcionPush[]
+  perfilReciclador         RecicladorPerfil?     @relation("PerfilReciclador")
+  invitados                RecicladorPerfil[]    @relation("InvitadoPor")
+  materiales               RecicladorMaterial[]
+  comprador                Comprador?
+  borradorNegocio          CompradorBorrador?
+  verificacionesRevisadas  Verificacion[]
+  preciosActualizados      PrecioMaterial[]
+  historialPrecios         HistorialPrecio[]
+  moderaciones             ModeracionPrecio[]
+  resenasOcultadas         ResenaOculta[]
+  alertasDescartadas       AlertaDescartada[]
+  publicaciones            Publicacion[]         @relation("PublicacionesPropias")
+  publicacionesCanceladas  Publicacion[]         @relation("PublicacionCanceladaPor")
+  operaciones              Operacion[]           @relation("OperacionesComoReciclador")
+  operacionesCanceladas    Operacion[]           @relation("OperacionCanceladaPor")
+  calificacionesHechas     Calificacion[]        @relation("CalificacionAutor")
+  calificacionesRecibidas  Calificacion[]        @relation("CalificacionDestino")
+  registros                RegistroReciclaje[]
+  reportesHechos           Reporte[]             @relation("ReporteAutor")
+  reportesResueltos        Reporte[]             @relation("ReporteResueltoPor")
+  favoritos                Favorito[]
+  busquedas                BusquedaGuardada[]
+  notificaciones           Notificacion[]
+  insignias                UsuarioInsignia[]
+  desafios                 UsuarioDesafio[]
+  movimientosPuntos        MovimientoPuntos[]    @relation("MovimientosPropios")
+  movimientosPorInvitado   MovimientoPuntos[]    @relation("MovimientoPorInvitado")
+  invitacionesHechas       Invitacion[]          @relation("Invitador")
+  invitacionRecibida       Invitacion?           @relation("Invitado")
+  giros                    Giro[]
+  sorteos                  SorteoRuleta[]
+  premiosGanados           PremioGanado[]
+  configuracionesRuleta    RuletaConfiguracion[]
+  pagosPlanRegistrados     PagoPlan[]
+  solicitudesPlanDecididas SolicitudPlan[]       @relation("SolicitudPlanDecidida")
+  planHistorialAdmin       PlanHistorial[]       @relation("PlanHistorialAdmin")
+  auditorias               Auditoria[]
+  listaEspera              ListaEsperaCiudad[]
+
+  @@index([rol, estado])
+  @@map("usuario")
+}
+
+model Sesion {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId  String    @map("usuario_id") @db.Uuid
+  hashToken  String    @unique @map("hash_token") @db.Char(64)
+  familia    String    @db.Uuid
+  creadaEn   DateTime  @default(now()) @map("creada_en") @db.Timestamptz(3)
+  expiraEn   DateTime  @map("expira_en") @db.Timestamptz(3)
+  usadaEn    DateTime? @map("usada_en") @db.Timestamptz(3)
+  revocadaEn DateTime? @map("revocada_en") @db.Timestamptz(3)
+  agente     String?   @db.VarChar(200)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@index([familia])
+  @@map("sesion")
+}
+
+model CodigoVerificacion {
+  id         String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId  String?         @map("usuario_id") @db.Uuid
+  destino    String          @db.VarChar(120)
+  proposito  PropositoCodigo
+  hashCodigo String          @map("hash_codigo") @db.Char(64)
+  intentos   Int             @default(0) @db.SmallInt
+  expiraEn   DateTime        @map("expira_en") @db.Timestamptz(3)
+  usadoEn    DateTime?       @map("usado_en") @db.Timestamptz(3)
+  creadoEn   DateTime        @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  usuario Usuario? @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([destino, proposito, creadoEn])
+  @@map("codigo_verificacion")
+}
+
+model IdentidadExterna {
+  id        String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId String             @map("usuario_id") @db.Uuid
+  proveedor ProveedorIdentidad
+  sujeto    String             @db.VarChar(120)
+  creadaEn  DateTime           @default(now()) @map("creada_en") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([proveedor, sujeto])
+  @@unique([usuarioId, proveedor])
+  @@map("identidad_externa")
+}
+
+model Consentimiento {
+  id         String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId  String             @map("usuario_id") @db.Uuid
+  tipo       TipoConsentimiento
+  version    String             @db.VarChar(20)
+  aceptadoEn DateTime           @default(now()) @map("aceptado_en") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, tipo, version])
+  @@map("consentimiento")
+}
+
+model Archivo {
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  propietarioId  String           @map("propietario_id") @db.Uuid
+  proposito      PropositoArchivo
+  clave          String           @unique @db.VarChar(200)
+  claveMiniatura String?          @map("clave_miniatura") @db.VarChar(200)
+  tipoMime       String           @map("tipo_mime") @db.VarChar(40)
+  bytes          Int
+  creadoEn       DateTime         @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  propietario      Usuario           @relation("ArchivosPropios", fields: [propietarioId], references: [id], onDelete: Cascade)
+  perfilDe         Usuario?          @relation("FotoPerfil")
+  fotosNegocio     CompradorFoto[]
+  fotosPublicacion PublicacionFoto[]
+
+  @@index([propietarioId])
+  @@map("archivo")
+}
+
+model PreferenciaUsuario {
+  usuarioId           String  @id @map("usuario_id") @db.Uuid
+  notifOfertas        Boolean @default(true) @map("notif_ofertas")
+  notifPremios        Boolean @default(true) @map("notif_premios")
+  notifPrecios        Boolean @default(false) @map("notif_precios")
+  notifAvisos         Boolean @default(true) @map("notif_avisos")
+  alertaFavPrecio     Boolean @default(true) @map("alerta_fav_precio")
+  alertaFavHorario    Boolean @default(false) @map("alerta_fav_horario")
+  alertaFavMovilCerca Boolean @default(false) @map("alerta_fav_movil_cerca")
+  visibleEnRanking    Boolean @default(true) @map("visible_en_ranking")
+  idioma              String  @default("es") @db.VarChar(5)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@map("preferencia_usuario")
+}
+
+model SuscripcionPush {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId String   @map("usuario_id") @db.Uuid
+  endpoint  String   @unique @db.VarChar(500)
+  p256dh    String   @db.VarChar(200)
+  auth      String   @db.VarChar(100)
+  creadaEn  DateTime @default(now()) @map("creada_en") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@map("suscripcion_push")
+}
+
+model RecicladorPerfil {
+  usuarioId              String  @id @map("usuario_id") @db.Uuid
+  zonaId                 Int?    @map("zona_id") @db.SmallInt
+  sobreMi                String? @map("sobre_mi") @db.VarChar(200)
+  nivelId                Int     @default(1) @map("nivel_id") @db.SmallInt
+  kgTotal                Decimal @default(0) @map("kg_total") @db.Decimal(10, 2)
+  puntos                 Int     @default(0)
+  puntosReciclaje        Int     @default(0) @map("puntos_reciclaje")
+  rachaSemanas           Int     @default(0) @map("racha_semanas") @db.SmallInt
+  operacionesCompletadas Int     @default(0) @map("operaciones_completadas")
+  califProm              Decimal @default(0) @map("calif_prom") @db.Decimal(3, 2)
+  califCant              Int     @default(0) @map("calif_cant")
+  codigoInvitacion       String  @unique @map("codigo_invitacion") @db.VarChar(20)
+  invitadoPorId          String? @map("invitado_por_id") @db.Uuid
+
+  usuario     Usuario  @relation("PerfilReciclador", fields: [usuarioId], references: [id], onDelete: Cascade)
+  zona        Zona?    @relation(fields: [zonaId], references: [id])
+  nivel       Nivel    @relation(fields: [nivelId], references: [id])
+  invitadoPor Usuario? @relation("InvitadoPor", fields: [invitadoPorId], references: [id], onDelete: SetNull)
+
+  @@map("reciclador_perfil")
+}
+
+model RecicladorMaterial {
+  usuarioId  String @map("usuario_id") @db.Uuid
+  materialId Int    @map("material_id") @db.SmallInt
+
+  usuario  Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  material Material @relation(fields: [materialId], references: [id])
+
+  @@id([usuarioId, materialId])
+  @@map("reciclador_material")
+}
+
+// Negocios
+model Comprador {
+  id                    String                                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId             String                                @unique @map("usuario_id") @db.Uuid
+  tipo                  CompradorTipo
+  nombreComercial       String                                @map("nombre_comercial") @db.VarChar(120)
+  descripcion           String?                               @db.VarChar(160)
+  direccion             String?                               @db.VarChar(160)
+  zonaId                Int?                                  @map("zona_id") @db.SmallInt
+  ubicacion             Unsupported("geography(Point,4326)")?
+  telefonoNegocio       String?                               @map("telefono_negocio") @db.Char(9)
+  whatsapp              String                                @db.Char(9)
+  vehiculo              Vehiculo?
+  plan                  Plan                                  @default(GRATIS)
+  planDesde             DateTime?                             @map("plan_desde") @db.Date
+  planHasta             DateTime?                             @map("plan_hasta") @db.Date
+  planAvisoEn           DateTime?                             @map("plan_aviso_en") @db.Timestamptz(3)
+  estadoVerificacion    VerificacionEstado                    @default(EN_REVISION) @map("estado_verificacion")
+  disponibilidad        Disponibilidad                        @default(DISPONIBLE)
+  mostrarZona           Boolean                               @default(true) @map("mostrar_zona")
+  ubicacionConfirmada   Boolean                               @default(false) @map("ubicacion_confirmada")
+  zonaActualizadaEn     DateTime?                             @map("zona_actualizada_en") @db.Timestamptz(3)
+  horaInicio            DateTime?                             @map("hora_inicio") @db.Time(0)
+  horaFin               DateTime?                             @map("hora_fin") @db.Time(0)
+  posicionAproximada    Unsupported("geography(Point,4326)")? @map("posicion_aproximada")
+  posicionActualizadaEn DateTime?                             @map("posicion_actualizada_en") @db.Timestamptz(3)
+  rutaPublicada         Boolean                               @default(false) @map("ruta_publicada")
+  diaVigente            DateTime?                             @map("dia_vigente") @db.Date
+  eliminadoEn           DateTime?                             @map("eliminado_en") @db.Timestamptz(3)
+  compartePosicion      Boolean                               @default(false) @map("comparte_posicion")
+  califProm             Decimal                               @default(0) @map("calif_prom") @db.Decimal(3, 2)
+  califCant             Int                                   @default(0) @map("calif_cant")
+  creadoEn              DateTime                              @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn         DateTime                              @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  zona    Zona?   @relation(fields: [zonaId], references: [id])
+
+  horarios        CompradorHorario[]
+  pagos           CompradorPago[]
+  fotos           CompradorFoto[]
+  paradas         ParadaRuta[]
+  verificaciones  Verificacion[]
+  precios         PrecioMaterial[]
+  ofertas         Oferta[]
+  operaciones     Operacion[]
+  registros       RegistroReciclaje[]
+  reportes        Reporte[]
+  favoritos       Favorito[]
+  solicitudes     SolicitudLlegada[]
+  visitas         EventoVisita[]
+  avisos          Aviso[]
+  solicitudesPlan SolicitudPlan[]
+  historialPlan   PlanHistorial[]
+  pagosPlan       PagoPlan[]
+
+  @@index([ubicacion], type: Gist)
+  @@index([estadoVerificacion, tipo])
+  @@map("comprador")
+}
+
+model CompradorBorrador {
+  usuarioId     String   @id @map("usuario_id") @db.Uuid
+  paso          Int      @default(1) @db.SmallInt
+  datos         Json
+  actualizadoEn DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@map("comprador_borrador")
+}
+
+model CompradorHorario {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  compradorId String   @map("comprador_id") @db.Uuid
+  dia         Int      @db.SmallInt
+  abre        DateTime @db.Time(0)
+  cierra      DateTime @db.Time(0)
+
+  comprador Comprador @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+
+  @@unique([compradorId, dia])
+  @@map("comprador_horario")
+}
+
+model CompradorPago {
+  compradorId String     @map("comprador_id") @db.Uuid
+  metodo      MetodoPago
+
+  comprador Comprador @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+
+  @@id([compradorId, metodo])
+  @@map("comprador_pago")
+}
+
+model CompradorFoto {
+  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  compradorId String @map("comprador_id") @db.Uuid
+  archivoId   String @unique @map("archivo_id") @db.Uuid
+  orden       Int    @db.SmallInt
+
+  comprador Comprador @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+  archivo   Archivo   @relation(fields: [archivoId], references: [id], onDelete: Cascade)
+
+  @@unique([compradorId, orden])
+  @@map("comprador_foto")
+}
+
+model ParadaRuta {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  compradorId String   @map("comprador_id") @db.Uuid
+  zonaId      Int      @map("zona_id") @db.SmallInt
+  desde       DateTime @db.Time(0)
+  hasta       DateTime @db.Time(0)
+  orden       Int      @db.SmallInt
+
+  comprador Comprador @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+  zona      Zona      @relation(fields: [zonaId], references: [id])
+
+  @@unique([compradorId, zonaId])
+  @@map("parada_ruta")
+}
+
+model Verificacion {
+  id            String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  compradorId   String             @map("comprador_id") @db.Uuid
+  tipo          VerificacionTipo   @default(REGISTRO)
+  estado        VerificacionEstado @default(EN_REVISION)
+  motivo        String?            @db.VarChar(120)
+  mensaje       String?            @db.VarChar(300)
+  cambios       Json?
+  revisadoPorId String?            @map("revisado_por_id") @db.Uuid
+  creadaEn      DateTime           @default(now()) @map("creada_en") @db.Timestamptz(3)
+  resueltaEn    DateTime?          @map("resuelta_en") @db.Timestamptz(3)
+
+  comprador   Comprador @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+  revisadoPor Usuario?  @relation(fields: [revisadoPorId], references: [id], onDelete: SetNull)
+
+  @@index([estado, creadaEn])
+  @@index([compradorId])
+  @@map("verificacion")
+}
+
+model PrecioMaterial {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  compradorId      String   @map("comprador_id") @db.Uuid
+  materialId       Int      @map("material_id") @db.SmallInt
+  precioMin        Decimal  @map("precio_min") @db.Decimal(6, 2)
+  precioMax        Decimal  @map("precio_max") @db.Decimal(6, 2)
+  demanda          Demanda  @default(MEDIA)
+  activo           Boolean  @default(true)
+  actualizadoEn    DateTime @default(now()) @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorId String   @map("actualizado_por_id") @db.Uuid
+
+  comprador      Comprador          @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+  material       Material           @relation(fields: [materialId], references: [id])
+  actualizadoPor Usuario            @relation(fields: [actualizadoPorId], references: [id])
+  historial      HistorialPrecio[]
+  moderaciones   ModeracionPrecio[]
+
+  @@unique([compradorId, materialId])
+  @@index([materialId, activo])
+  @@map("precio_material")
+}
+
+model HistorialPrecio {
+  id               BigInt   @id @default(autoincrement())
+  precioMaterialId String   @map("precio_material_id") @db.Uuid
+  precioMin        Decimal  @map("precio_min") @db.Decimal(6, 2)
+  precioMax        Decimal  @map("precio_max") @db.Decimal(6, 2)
+  autorId          String   @map("autor_id") @db.Uuid
+  cambiadoEn       DateTime @default(now()) @map("cambiado_en") @db.Timestamptz(3)
+
+  precioMaterial PrecioMaterial @relation(fields: [precioMaterialId], references: [id], onDelete: Cascade)
+  autor          Usuario        @relation(fields: [autorId], references: [id])
+
+  @@index([precioMaterialId, cambiadoEn])
+  @@map("historial_precio")
+}
+
+model ModeracionPrecio {
+  id               String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  precioMaterialId String           @map("precio_material_id") @db.Uuid
+  estado           ModeracionEstado
+  motivo           String           @db.VarChar(300)
+  plazoHasta       DateTime?        @map("plazo_hasta") @db.Timestamptz(3)
+  adminId          String           @map("admin_id") @db.Uuid
+  creadaEn         DateTime         @default(now()) @map("creada_en") @db.Timestamptz(3)
+  cerradaEn        DateTime?        @map("cerrada_en") @db.Timestamptz(3)
+  motivoCierre     String?          @map("motivo_cierre") @db.VarChar(300)
+  plazoAvisadoEn   DateTime?        @map("plazo_avisado_en") @db.Timestamptz(3)
+
+  precioMaterial PrecioMaterial @relation(fields: [precioMaterialId], references: [id], onDelete: Cascade)
+  admin          Usuario        @relation(fields: [adminId], references: [id])
+
+  @@index([precioMaterialId, cerradaEn])
+  @@map("moderacion_precio")
+}
+
+// Publicaciones, ofertas y operaciones
+model Publicacion {
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  recicladorId      String            @map("reciclador_id") @db.Uuid
+  materialId        Int               @map("material_id") @db.SmallInt
+  cantidadKg        Decimal           @map("cantidad_kg") @db.Decimal(8, 2)
+  precioEsperado    Decimal?          @map("precio_esperado") @db.Decimal(6, 2)
+  nota              String?           @db.VarChar(140)
+  ciudadId          Int               @map("ciudad_id") @db.SmallInt
+  estado            PublicacionEstado @default(DISPONIBLE)
+  motivoCancelacion String?           @map("motivo_cancelacion") @db.VarChar(200)
+  canceladaPorId    String?           @map("cancelada_por_id") @db.Uuid
+  origenId          String?           @map("origen_id") @db.Uuid
+  creadaEn          DateTime          @default(now()) @map("creada_en") @db.Timestamptz(3)
+  venceEn           DateTime          @map("vence_en") @db.Timestamptz(3)
+  avisoVencerEn     DateTime?         @map("aviso_vencer_en") @db.Timestamptz(3)
+  actualizadaEn     DateTime          @default(now()) @updatedAt @map("actualizada_en") @db.Timestamptz(3)
+
+  reciclador   Usuario       @relation("PublicacionesPropias", fields: [recicladorId], references: [id])
+  material     Material      @relation(fields: [materialId], references: [id])
+  ciudad       Ciudad        @relation(fields: [ciudadId], references: [id])
+  canceladaPor Usuario?      @relation("PublicacionCanceladaPor", fields: [canceladaPorId], references: [id], onDelete: SetNull)
+  origen       Publicacion?  @relation("PublicacionDuplicada", fields: [origenId], references: [id], onDelete: SetNull)
+  copias       Publicacion[] @relation("PublicacionDuplicada")
+
+  ubicacion PublicacionUbicacion?
+  fotos     PublicacionFoto[]
+  ofertas   Oferta[]
+  operacion Operacion?
+
+  @@index([recicladorId, estado])
+  @@index([ciudadId, estado, creadaEn])
+  @@index([estado, venceEn])
+  @@map("publicacion")
+}
+
+model PublicacionUbicacion {
+  publicacionId String                               @id @map("publicacion_id") @db.Uuid
+  ubicacion     Unsupported("geography(Point,4326)")
+  origen        OrigenUbicacion                      @default(GPS)
+
+  publicacion Publicacion @relation(fields: [publicacionId], references: [id], onDelete: Cascade)
+
+  @@index([ubicacion], type: Gist)
+  @@map("publicacion_ubicacion")
+}
+
+model PublicacionFoto {
+  id            String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  publicacionId String @map("publicacion_id") @db.Uuid
+  archivoId     String @unique @map("archivo_id") @db.Uuid
+  orden         Int    @db.SmallInt
+
+  publicacion Publicacion @relation(fields: [publicacionId], references: [id], onDelete: Cascade)
+  archivo     Archivo     @relation(fields: [archivoId], references: [id], onDelete: Cascade)
+
+  @@unique([publicacionId, orden])
+  @@map("publicacion_foto")
+}
+
+model Oferta {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  publicacionId String       @map("publicacion_id") @db.Uuid
+  compradorId   String       @map("comprador_id") @db.Uuid
+  precioKg      Decimal      @map("precio_kg") @db.Decimal(6, 2)
+  total         Decimal      @db.Decimal(10, 2)
+  mensaje       String?      @db.VarChar(200)
+  cuandoRecoge  String?      @map("cuando_recoge") @db.VarChar(40)
+  estado        OfertaEstado @default(PENDIENTE)
+  creadaEn      DateTime     @default(now()) @map("creada_en") @db.Timestamptz(3)
+  actualizadaEn DateTime     @default(now()) @updatedAt @map("actualizada_en") @db.Timestamptz(3)
+  resueltaEn    DateTime?    @map("resuelta_en") @db.Timestamptz(3)
+
+  publicacion Publicacion @relation(fields: [publicacionId], references: [id], onDelete: Cascade)
+  comprador   Comprador   @relation(fields: [compradorId], references: [id])
+  operacion   Operacion?
+
+  @@index([publicacionId, estado])
+  @@index([compradorId, estado])
+  @@map("oferta")
+}
+
+model Operacion {
+  id                 String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  publicacionId      String          @unique @map("publicacion_id") @db.Uuid
+  ofertaId           String          @unique @map("oferta_id") @db.Uuid
+  recicladorId       String          @map("reciclador_id") @db.Uuid
+  compradorId        String          @map("comprador_id") @db.Uuid
+  estado             OperacionEstado @default(ACEPTADA)
+  enDisputa          Boolean         @default(false) @map("en_disputa")
+  kgFinal            Decimal?        @map("kg_final") @db.Decimal(8, 2)
+  montoFinal         Decimal?        @map("monto_final") @db.Decimal(10, 2)
+  ofertasAlAceptar   Int             @default(1) @map("ofertas_al_aceptar") @db.SmallInt
+  aceptoMayorTotal   Boolean         @default(false) @map("acepto_mayor_total")
+  completadaPorPlazo Boolean         @default(false) @map("completada_por_plazo")
+  motivoCancelacion  String?         @map("motivo_cancelacion") @db.VarChar(200)
+  canceladaPorId     String?         @map("cancelada_por_id") @db.Uuid
+  creadaEn           DateTime        @default(now()) @map("creada_en") @db.Timestamptz(3)
+  coordinadaEn       DateTime?       @map("coordinada_en") @db.Timestamptz(3)
+  entregadaEn        DateTime?       @map("entregada_en") @db.Timestamptz(3)
+  confirmadaEn       DateTime?       @map("confirmada_en") @db.Timestamptz(3)
+  completadaEn       DateTime?       @map("completada_en") @db.Timestamptz(3)
+  canceladaEn        DateTime?       @map("cancelada_en") @db.Timestamptz(3)
+  avisoEntregaEn     DateTime?       @map("aviso_entrega_en") @db.Timestamptz(3)
+  plazoAvisoEntregaHoras Int?        @map("plazo_aviso_entrega_horas") @db.SmallInt
+  plazoConformidadHoras  Int?        @map("plazo_conformidad_horas") @db.SmallInt
+  correccionPedidaEn DateTime?       @map("correccion_pedida_en") @db.Timestamptz(3)
+
+  publicacion  Publicacion @relation(fields: [publicacionId], references: [id])
+  oferta       Oferta      @relation(fields: [ofertaId], references: [id])
+  reciclador   Usuario     @relation("OperacionesComoReciclador", fields: [recicladorId], references: [id])
+  comprador    Comprador   @relation(fields: [compradorId], references: [id])
+  canceladaPor Usuario?    @relation("OperacionCanceladaPor", fields: [canceladaPorId], references: [id], onDelete: SetNull)
+
+  coordinacion   Coordinacion?
+  calificaciones Calificacion[]
+  reportes       Reporte[]
+  movimientos    MovimientoPuntos[]
+
+  @@index([recicladorId, estado])
+  @@index([compradorId, estado])
+  @@index([estado, entregadaEn])
+  @@index([estado, confirmadaEn])
+  @@map("operacion")
+}
+
+model Coordinacion {
+  operacionId String                                @id @map("operacion_id") @db.Uuid
+  tipo        PuntoEncuentroTipo
+  referencia  String?                               @db.VarChar(160)
+  pin         Unsupported("geography(Point,4326)")?
+  dia         DateTime?                             @db.Date
+  franja      Franja?
+  mensaje     String?                               @db.VarChar(200)
+  definidaEn  DateTime                              @default(now()) @map("definida_en") @db.Timestamptz(3)
+
+  operacion Operacion @relation(fields: [operacionId], references: [id], onDelete: Cascade)
+
+  @@map("coordinacion")
+}
+
+model Calificacion {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  operacionId String   @map("operacion_id") @db.Uuid
+  autorId     String   @map("autor_id") @db.Uuid
+  destinoId   String   @map("destino_id") @db.Uuid
+  estrellas   Int      @db.SmallInt
+  comentario  String?  @db.VarChar(300)
+  creadaEn    DateTime @default(now()) @map("creada_en") @db.Timestamptz(3)
+
+  operacion Operacion              @relation(fields: [operacionId], references: [id])
+  autor     Usuario                @relation("CalificacionAutor", fields: [autorId], references: [id])
+  destino   Usuario                @relation("CalificacionDestino", fields: [destinoId], references: [id])
+  etiquetas CalificacionEtiqueta[]
+  respuesta RespuestaCalificacion?
+  reportes  Reporte[]
+  oculta    ResenaOculta?
+
+  @@unique([operacionId, autorId])
+  @@index([destinoId, creadaEn])
+  @@map("calificacion")
+}
+
+model CalificacionEtiqueta {
+  calificacionId String @map("calificacion_id") @db.Uuid
+  etiquetaId     Int    @map("etiqueta_id") @db.SmallInt
+
+  calificacion Calificacion         @relation(fields: [calificacionId], references: [id], onDelete: Cascade)
+  etiqueta     EtiquetaCalificacion @relation(fields: [etiquetaId], references: [id])
+
+  @@id([calificacionId, etiquetaId])
+  @@map("calificacion_etiqueta")
+}
+
+// La reseña oculta por el administrador no se borra: se marca aparte, con motivo
+model ResenaOculta {
+  calificacionId String   @id @map("calificacion_id") @db.Uuid
+  adminId        String   @map("admin_id") @db.Uuid
+  motivo         String   @db.VarChar(300)
+  creadaEn       DateTime @default(now()) @map("creada_en") @db.Timestamptz(3)
+
+  calificacion Calificacion @relation(fields: [calificacionId], references: [id], onDelete: Cascade)
+  admin        Usuario      @relation(fields: [adminId], references: [id])
+
+  @@map("resena_oculta")
+}
+
+model RespuestaCalificacion {
+  calificacionId String   @id @map("calificacion_id") @db.Uuid
+  texto          String   @db.VarChar(300)
+  creadaEn       DateTime @default(now()) @map("creada_en") @db.Timestamptz(3)
+
+  calificacion Calificacion @relation(fields: [calificacionId], references: [id], onDelete: Cascade)
+
+  @@map("respuesta_calificacion")
+}
+
+model RegistroReciclaje {
+  id              String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  recicladorId    String         @map("reciclador_id") @db.Uuid
+  compradorId     String         @map("comprador_id") @db.Uuid
+  materialId      Int            @map("material_id") @db.SmallInt
+  kg              Decimal        @db.Decimal(8, 2)
+  kgConfirmado    Decimal?       @map("kg_confirmado") @db.Decimal(8, 2)
+  fecha           DateTime       @db.Date
+  estado          RegistroEstado @default(PENDIENTE)
+  motivoRechazo   String?        @map("motivo_rechazo") @db.VarChar(200)
+  creadoEn        DateTime       @default(now()) @map("creado_en") @db.Timestamptz(3)
+  resueltoEn      DateTime?      @map("resuelto_en") @db.Timestamptz(3)
+  venceEn         DateTime       @default(dbgenerated("(now() + '7 days'::interval)")) @map("vence_en") @db.Timestamptz(3)
+  puntosOtorgados Int            @default(0) @map("puntos_otorgados")
+
+  reciclador  Usuario            @relation(fields: [recicladorId], references: [id])
+  comprador   Comprador          @relation(fields: [compradorId], references: [id])
+  material    Material           @relation(fields: [materialId], references: [id])
+  movimientos MovimientoPuntos[]
+
+  @@index([compradorId, estado])
+  @@index([recicladorId, estado])
+  @@map("registro_reciclaje")
+}
+
+// Reportes, favoritos, avisos y notificaciones
+model Reporte {
+  id             String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tipo           ReporteTipo
+  autorId        String                @map("autor_id") @db.Uuid
+  compradorId    String?               @map("comprador_id") @db.Uuid
+  materialId     Int?                  @map("material_id") @db.SmallInt
+  operacionId    String?               @map("operacion_id") @db.Uuid
+  calificacionId String?               @map("calificacion_id") @db.Uuid
+  motivo         ReporteMotivo
+  precioVisto    Decimal?              @map("precio_visto") @db.Decimal(6, 2)
+  detalle        String?               @db.VarChar(300)
+  estado         ReporteEstado         @default(PENDIENTE)
+  plazoHasta     DateTime?             @map("plazo_hasta") @db.Timestamptz(3)
+  decision       String?               @db.VarChar(300)
+  resolucion     ResolucionIncidencia?
+  resueltoPorId  String?               @map("resuelto_por_id") @db.Uuid
+  creadoEn       DateTime              @default(now()) @map("creado_en") @db.Timestamptz(3)
+  resueltoEn     DateTime?             @map("resuelto_en") @db.Timestamptz(3)
+  plazoAvisadoEn DateTime?             @map("plazo_avisado_en") @db.Timestamptz(3)
+
+  autor        Usuario       @relation("ReporteAutor", fields: [autorId], references: [id])
+  comprador    Comprador?    @relation(fields: [compradorId], references: [id])
+  material     Material?     @relation(fields: [materialId], references: [id])
+  operacion    Operacion?    @relation(fields: [operacionId], references: [id])
+  calificacion Calificacion? @relation(fields: [calificacionId], references: [id])
+  resueltoPor  Usuario?      @relation("ReporteResueltoPor", fields: [resueltoPorId], references: [id], onDelete: SetNull)
+
+  @@index([tipo, estado, creadoEn])
+  @@index([compradorId, estado])
+  @@index([operacionId])
+  @@map("reporte")
+}
+
+model Favorito {
+  usuarioId   String   @map("usuario_id") @db.Uuid
+  compradorId String   @map("comprador_id") @db.Uuid
+  creadoEn    DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  alertaPrecio Boolean @default(true) @map("alerta_precio")
+  alertaAvisos Boolean @default(true) @map("alerta_avisos")
+
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  comprador Comprador @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+
+  @@id([usuarioId, compradorId])
+  @@index([compradorId])
+  @@map("favorito")
+}
+
+model BusquedaGuardada {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId String   @map("usuario_id") @db.Uuid
+  nombre    String   @db.VarChar(80)
+  filtros   Json
+  creadaEn  DateTime @default(now()) @map("creada_en") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@map("busqueda_guardada")
+}
+
+model SolicitudLlegada {
+  id          BigInt   @id @default(autoincrement())
+  compradorId String   @map("comprador_id") @db.Uuid
+  materialId  Int?     @map("material_id") @db.SmallInt
+  fecha       DateTime @db.Date
+  creadaEn    DateTime @default(now()) @map("creada_en") @db.Timestamptz(3)
+
+  comprador Comprador @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+  material  Material? @relation(fields: [materialId], references: [id])
+
+  @@index([compradorId, fecha])
+  @@map("solicitud_llegada")
+}
+
+model EventoVisita {
+  id          BigInt   @id @default(autoincrement())
+  compradorId String   @map("comprador_id") @db.Uuid
+  materialId  Int?     @map("material_id") @db.SmallInt
+  fecha       DateTime @db.Date
+  hora        Int      @db.SmallInt
+  visitante   String   @db.Char(64)
+
+  comprador Comprador @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+  material  Material? @relation(fields: [materialId], references: [id])
+
+  @@unique([compradorId, fecha, visitante])
+  @@map("evento_visita")
+}
+
+model Aviso {
+  id           String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  compradorId  String      @map("comprador_id") @db.Uuid
+  tipo         AvisoTipo
+  titulo       String      @db.VarChar(80)
+  mensaje      String?     @db.VarChar(200)
+  vigenteHasta DateTime    @map("vigente_hasta") @db.Date
+  creadoEn     DateTime    @default(now()) @map("creado_en") @db.Timestamptz(3)
+  retiradoEn   DateTime?   @map("retirado_en") @db.Timestamptz(3)
+  estado       AvisoEstado @default(ACTIVO)
+  motivoOculto String?     @map("motivo_oculto") @db.VarChar(200)
+  ocultoPorId  String?     @map("oculto_por_id") @db.Uuid
+  ocultoEn     DateTime?   @map("oculto_en") @db.Timestamptz(3)
+
+  comprador Comprador @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+  ocultoPor Usuario?  @relation("AvisosOcultados", fields: [ocultoPorId], references: [id], onDelete: SetNull)
+
+  @@index([compradorId, vigenteHasta])
+  @@map("aviso")
+}
+
+model Notificacion {
+  id            String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId     String           @map("usuario_id") @db.Uuid
+  tipo          NotificacionTipo
+  titulo        String           @db.VarChar(80)
+  mensaje       String           @db.VarChar(200)
+  enlace        String?          @db.VarChar(200)
+  leidaEn       DateTime?        @map("leida_en") @db.Timestamptz(3)
+  pushEnviadaEn DateTime?        @map("push_enviada_en") @db.Timestamptz(3)
+  creadaEn      DateTime         @default(now()) @map("creada_en") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId, creadaEn])
+  @@index([creadaEn])
+  @@map("notificacion")
+}
+
+model EventoDominio {
+  id          BigInt    @id @default(autoincrement())
+  tipo        String    @db.VarChar(60)
+  entidad     String    @db.VarChar(40)
+  entidadId   String    @map("entidad_id") @db.VarChar(40)
+  datos       Json
+  creadoEn    DateTime  @default(now()) @map("creado_en") @db.Timestamptz(3)
+  procesadoEn DateTime? @map("procesado_en") @db.Timestamptz(3)
+
+  @@index([procesadoEn, id])
+  @@map("evento_dominio")
+}
+
+// Juego
+model UsuarioInsignia {
+  usuarioId  String   @map("usuario_id") @db.Uuid
+  insigniaId Int      @map("insignia_id") @db.SmallInt
+  obtenidaEn DateTime @default(now()) @map("obtenida_en") @db.Timestamptz(3)
+
+  usuario  Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  insignia Insignia @relation(fields: [insigniaId], references: [id])
+
+  @@id([usuarioId, insigniaId])
+  @@map("usuario_insignia")
+}
+
+model PlantillaDesafio {
+  id          Int         @id @default(autoincrement()) @db.SmallInt
+  codigo      String      @unique @db.VarChar(40)
+  nombre      String      @db.VarChar(80)
+  descripcion String      @db.VarChar(200)
+  tipo        DesafioTipo
+  materialId  Int?        @map("material_id") @db.SmallInt
+  meta        Decimal     @db.Decimal(8, 2)
+  unidad      String      @db.VarChar(20)
+  puntos      Int
+  esMetaMes   Boolean     @default(false) @map("es_meta_mes")
+  activa      Boolean     @default(true)
+
+  material Material? @relation(fields: [materialId], references: [id])
+  desafios Desafio[]
+
+  @@map("plantilla_desafio")
+}
+
+model Desafio {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  plantillaId Int      @map("plantilla_id") @db.SmallInt
+  mes         DateTime @db.Date
+  meta        Decimal  @db.Decimal(8, 2)
+  puntos      Int
+  esMetaMes   Boolean  @default(false) @map("es_meta_mes")
+  reclamoExtraHoras Int @default(0) @map("reclamo_extra_horas")
+
+  plantilla   PlantillaDesafio   @relation(fields: [plantillaId], references: [id])
+  usuarios    UsuarioDesafio[]
+  movimientos MovimientoPuntos[]
+  giros       Giro[]
+
+  @@unique([plantillaId, mes])
+  @@map("desafio")
+}
+
+model UsuarioDesafio {
+  usuarioId          String    @map("usuario_id") @db.Uuid
+  desafioId          String    @map("desafio_id") @db.Uuid
+  progreso           Decimal   @default(0) @db.Decimal(8, 2)
+  completadoEn       DateTime? @map("completado_en") @db.Timestamptz(3)
+  reclamadoEn        DateTime? @map("reclamado_en") @db.Timestamptz(3)
+  acreditadoAlCierre Boolean   @default(false) @map("acreditado_al_cierre")
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  desafio Desafio @relation(fields: [desafioId], references: [id], onDelete: Cascade)
+
+  @@id([usuarioId, desafioId])
+  @@map("usuario_desafio")
+}
+
+model MovimientoPuntos {
+  id              String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId       String       @map("usuario_id") @db.Uuid
+  puntos          Int
+  motivo          PuntosMotivo
+  cuentaParaGiros Boolean      @map("cuenta_para_giros")
+  operacionId     String?      @map("operacion_id") @db.Uuid
+  registroId      String?      @map("registro_id") @db.Uuid
+  desafioId       String?      @map("desafio_id") @db.Uuid
+  sorteoId        String?      @unique @map("sorteo_id") @db.Uuid
+  invitadoId      String?      @map("invitado_id") @db.Uuid
+  creadoEn        DateTime     @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  usuario   Usuario            @relation("MovimientosPropios", fields: [usuarioId], references: [id], onDelete: Cascade)
+  operacion Operacion?         @relation(fields: [operacionId], references: [id])
+  registro  RegistroReciclaje? @relation(fields: [registroId], references: [id])
+  desafio   Desafio?           @relation(fields: [desafioId], references: [id])
+  sorteo    SorteoRuleta?      @relation(fields: [sorteoId], references: [id])
+  invitado  Usuario?           @relation("MovimientoPorInvitado", fields: [invitadoId], references: [id], onDelete: SetNull)
+
+  @@unique([operacionId, motivo])
+  @@unique([registroId, motivo])
+  @@unique([usuarioId, desafioId])
+  @@unique([usuarioId, invitadoId])
+  @@index([usuarioId, creadoEn])
+  @@map("movimiento_puntos")
+}
+
+model Invitacion {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  invitadorId String    @map("invitador_id") @db.Uuid
+  invitadoId  String    @unique @map("invitado_id") @db.Uuid
+  creadaEn    DateTime  @default(now()) @map("creada_en") @db.Timestamptz(3)
+  contadaEn   DateTime? @map("contada_en") @db.Timestamptz(3)
+
+  invitador Usuario @relation("Invitador", fields: [invitadorId], references: [id], onDelete: Cascade)
+  invitado  Usuario @relation("Invitado", fields: [invitadoId], references: [id], onDelete: Cascade)
+
+  @@index([invitadorId])
+  @@map("invitacion")
+}
+
+model Giro {
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId String     @map("usuario_id") @db.Uuid
+  origen    GiroOrigen
+  numero    Int?
+  desafioId String?    @map("desafio_id") @db.Uuid
+  creadoEn  DateTime   @default(now()) @map("creado_en") @db.Timestamptz(3)
+  usadoEn   DateTime?  @map("usado_en") @db.Timestamptz(3)
+
+  usuario Usuario       @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  desafio Desafio?      @relation(fields: [desafioId], references: [id])
+  sorteo  SorteoRuleta?
+
+  @@unique([usuarioId, origen, numero])
+  @@unique([usuarioId, desafioId])
+  @@index([usuarioId, usadoEn])
+  @@map("giro")
+}
+
+model Premio {
+  id                String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre            String     @unique @db.VarChar(60)
+  tipo              PremioTipo
+  puntos            Int?
+  probabilidad      Decimal    @db.Decimal(5, 2)
+  stock             Int?
+  patrocinado       Boolean    @default(false)
+  patrocinador      String?    @db.VarChar(80)
+  puntoEntrega      String?    @map("punto_entrega") @db.VarChar(160)
+  vigenciaCanjeDias Int?       @map("vigencia_canje_dias") @db.SmallInt
+  vigenteDesde      DateTime?  @map("vigente_desde") @db.Timestamptz(3)
+  vigenteHasta      DateTime?  @map("vigente_hasta") @db.Timestamptz(3)
+  activo            Boolean    @default(true)
+  orden             Int        @db.SmallInt
+
+  sorteos SorteoRuleta[]
+  ganados PremioGanado[]
+
+  @@map("premio")
+}
+
+model RuletaConfiguracion {
+  id             Int      @id @default(autoincrement())
+  premios        Json
+  publicadaPorId String?  @map("publicada_por_id") @db.Uuid
+  publicadaEn    DateTime @default(now()) @map("publicada_en") @db.Timestamptz(3)
+
+  publicadaPor Usuario?       @relation(fields: [publicadaPorId], references: [id], onDelete: SetNull)
+  sorteos      SorteoRuleta[]
+
+  @@map("ruleta_configuracion")
+}
+
+model SorteoRuleta {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  giroId          String   @unique @map("giro_id") @db.Uuid
+  usuarioId       String   @map("usuario_id") @db.Uuid
+  configuracionId Int      @map("configuracion_id")
+  numeroSorteado  Int      @map("numero_sorteado")
+  premioId        String   @map("premio_id") @db.Uuid
+  claveSolicitud  String?  @map("clave_solicitud") @db.VarChar(64)
+  instantanea     Json     @default("{}")
+  creadoEn        DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  giro          Giro                @relation(fields: [giroId], references: [id])
+  usuario       Usuario             @relation(fields: [usuarioId], references: [id])
+  configuracion RuletaConfiguracion @relation(fields: [configuracionId], references: [id])
+  premio        Premio              @relation(fields: [premioId], references: [id])
+  premioGanado  PremioGanado?
+  movimiento    MovimientoPuntos?
+
+  @@unique([usuarioId, claveSolicitud])
+  @@index([usuarioId, creadoEn])
+  @@map("sorteo_ruleta")
+}
+
+model PremioGanado {
+  id           String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sorteoId     String             @unique @map("sorteo_id") @db.Uuid
+  usuarioId    String             @map("usuario_id") @db.Uuid
+  premioId     String             @map("premio_id") @db.Uuid
+  codigo       String             @unique @db.VarChar(12)
+  estado       PremioGanadoEstado @default(POR_RECLAMAR)
+  puntoEntrega String             @map("punto_entrega") @db.VarChar(160)
+  venceEn      DateTime           @map("vence_en") @db.Timestamptz(3)
+  reclamadoEn  DateTime?          @map("reclamado_en") @db.Timestamptz(3)
+  entregadoEn  DateTime?          @map("entregado_en") @db.Timestamptz(3)
+  renunciadoEn DateTime?          @map("renunciado_en") @db.Timestamptz(3)
+  avisoVenceEn DateTime?          @map("aviso_vence_en") @db.Timestamptz(3)
+  creadoEn     DateTime           @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  sorteo  SorteoRuleta @relation(fields: [sorteoId], references: [id])
+  usuario Usuario      @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  premio  Premio       @relation(fields: [premioId], references: [id])
+
+  @@index([usuarioId, estado])
+  @@index([estado, venceEn])
+  @@map("premio_ganado")
+}
+
+// Plan y administración
+model SolicitudPlan {
+  id             String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  compradorId    String              @map("comprador_id") @db.Uuid
+  estado         SolicitudPlanEstado @default(PENDIENTE)
+  mensaje        String?             @db.VarChar(200)
+  motivoDecision String?             @map("motivo_decision") @db.VarChar(200)
+  decididaPorId  String?             @map("decidida_por_id") @db.Uuid
+  desde          DateTime?           @db.Date
+  hasta          DateTime?           @db.Date
+  creadaEn       DateTime            @default(now()) @map("creada_en") @db.Timestamptz(3)
+  atendidaEn     DateTime?           @map("atendida_en") @db.Timestamptz(3)
+
+  comprador   Comprador       @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+  decididaPor Usuario?        @relation("SolicitudPlanDecidida", fields: [decididaPorId], references: [id])
+  historial   PlanHistorial[]
+
+  @@index([estado, creadaEn])
+  @@map("solicitud_plan")
+}
+
+enum PlanAccion {
+  ACTIVADO
+  DESACTIVADO
+  VENCIDO
+
+  @@map("plan_accion")
+}
+
+model PlanHistorial {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  compradorId String     @map("comprador_id") @db.Uuid
+  accion      PlanAccion
+  desde       DateTime?  @db.Date
+  hasta       DateTime?  @db.Date
+  motivo      String     @db.VarChar(200)
+  adminId     String?    @map("admin_id") @db.Uuid
+  solicitudId String?    @map("solicitud_id") @db.Uuid
+  creadoEn    DateTime   @default(now()) @map("creado_en") @db.Timestamptz(3)
+  txId        BigInt     @default(dbgenerated("txid_current()")) @map("tx_id")
+
+  comprador Comprador      @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+  admin     Usuario?       @relation("PlanHistorialAdmin", fields: [adminId], references: [id])
+  solicitud SolicitudPlan? @relation(fields: [solicitudId], references: [id], onDelete: SetNull)
+
+  @@index([compradorId, creadoEn])
+  @@map("plan_historial")
+}
+
+model PagoPlan {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  compradorId     String        @map("comprador_id") @db.Uuid
+  monto           Decimal       @db.Decimal(8, 2)
+  medio           MedioPagoPlan
+  periodoDesde    DateTime      @map("periodo_desde") @db.Date
+  periodoHasta    DateTime      @map("periodo_hasta") @db.Date
+  registradoPorId String        @map("registrado_por_id") @db.Uuid
+  creadoEn        DateTime      @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  comprador     Comprador @relation(fields: [compradorId], references: [id], onDelete: Cascade)
+  registradoPor Usuario   @relation(fields: [registradoPorId], references: [id])
+
+  @@index([compradorId, periodoDesde])
+  @@map("pago_plan")
+}
+
+// Alertas de posible colusión que la administración descartó con motivo
+model AlertaDescartada {
+  id       BigInt   @id @default(autoincrement())
+  tipo     String   @db.VarChar(10)
+  clave    String   @db.VarChar(80)
+  motivo   String   @db.VarChar(300)
+  adminId  String   @map("admin_id") @db.Uuid
+  creadaEn DateTime @default(now()) @map("creada_en") @db.Timestamptz(3)
+
+  admin Usuario @relation(fields: [adminId], references: [id])
+
+  @@index([tipo, clave])
+  @@map("alerta_descartada")
+}
+
+model Auditoria {
+  id        BigInt        @id @default(autoincrement())
+  adminId   String        @map("admin_id") @db.Uuid
+  tipo      AuditoriaTipo
+  accion    String        @db.VarChar(60)
+  entidad   String        @db.VarChar(40)
+  entidadId String        @map("entidad_id") @db.VarChar(40)
+  motivo    String?       @db.VarChar(300)
+  antes     Json?
+  despues   Json?
+  creadaEn  DateTime      @default(now()) @map("creada_en") @db.Timestamptz(3)
+  txId      BigInt        @default(dbgenerated("txid_current()")) @map("tx_id")
+
+  admin Usuario @relation(fields: [adminId], references: [id])
+
+  @@index([tipo, creadaEn])
+  @@index([creadaEn])
+  @@map("auditoria")
+}
+
+model RegistroPrivacidad {
+  id        BigInt   @id @default(autoincrement())
+  usuarioId String   @map("usuario_id") @db.Uuid
+  tipo      String   @db.VarChar(40)
+  creadoEn  DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+
+  @@index([creadoEn])
+  @@map("registro_privacidad")
+}
+
+model ExportacionDatos {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId String   @map("usuario_id") @db.Uuid
+  dia       DateTime @db.Date
+  creadaEn  DateTime @default(now()) @map("creada_en") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+
+  @@unique([usuarioId, dia])
+  @@map("exportacion_datos")
+}
+
+model ArchivoPorBorrar {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clave          String   @db.VarChar(200)
+  claveMiniatura String?  @map("clave_miniatura") @db.VarChar(200)
+  creadoEn       DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  @@map("archivo_por_borrar")
+}
+
+model ControlOperativo {
+  id                        Int       @id @default(1) @db.SmallInt
+  bannerTexto               String?   @map("banner_texto") @db.VarChar(140)
+  bannerDesde               DateTime? @map("banner_desde") @db.Timestamptz(3)
+  bannerHasta               DateTime? @map("banner_hasta") @db.Timestamptz(3)
+  bannerVersion             Int       @default(0) @map("banner_version")
+  registroRecicladorAbierto Boolean   @default(true) @map("registro_reciclador_abierto")
+  registroNegocioAbierto    Boolean   @default(true) @map("registro_negocio_abierto")
+  mantenimientoActivo       Boolean   @default(false) @map("mantenimiento_activo")
+  mantenimientoMensaje      String?   @map("mantenimiento_mensaje") @db.VarChar(200)
+  mantenimientoDesde        DateTime? @map("mantenimiento_desde") @db.Timestamptz(3)
+  actualizadoEn             DateTime  @default(now()) @map("actualizado_en") @db.Timestamptz(3)
+
+  @@map("control_operativo")
+}
+
+model MantenimientoIntervalo {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  desde       DateTime  @db.Timestamptz(3)
+  hasta       DateTime? @db.Timestamptz(3)
+  extendidoEn DateTime? @map("extendido_en") @db.Timestamptz(3)
+
+  @@map("mantenimiento_intervalo")
+}

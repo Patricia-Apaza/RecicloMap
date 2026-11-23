@@ -1,0 +1,8 @@
+import { iconoApp } from '@/pwa/icono-app';
+
+export const size = { width: 180, height: 180 };
+export const contentType = 'image/png';
+
+export default function IconoApple() {
+  return iconoApp(180);
+}

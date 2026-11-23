@@ -1,0 +1,22 @@
+packages:
+  - apps/*
+  - packages/*
+allowBuilds:
+  '@parcel/watcher': false
+  '@prisma/engines': true
+  '@scarf/scarf': false
+  esbuild: true
+  prisma: true
+# Dependencias de la herramienta de pruebas de Postman (newman) con avisos conocidos: se fuerzan a la versión corregida
+overrides:
+  handlebars: '>=4.7.10'
+  lodash: '>=4.17.24'
+  flatted: '>=3.4.2'
+  node-forge: '>=1.4.3'
+  underscore: '>=1.13.8'
+  '@faker-js/faker': 'link:./herramientas/faker-vacio'
+  qs: '>=6.16.1'
+  uuid: '>=11.1.1'
+  jose: '>=4.15.5'
+  csv-parse: '>=7.0.2'
+  minimatch: '>=11.0.1'

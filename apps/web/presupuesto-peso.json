@@ -1,0 +1,51 @@
+{
+  "descripcion": "Peso transferido en la primera visita (sin caché), medido con un navegador real sobre la compilación de producción. limiteKb nulo = solo se informa.",
+  "paginas": [
+    {
+      "nombre": "Página de muestra del sistema de diseño",
+      "ruta": "/interno/guia",
+      "limiteKb": null,
+      "activa": true
+    },
+    {
+      "nombre": "Bienvenida (01)",
+      "ruta": "/",
+      "limiteKb": 1024,
+      "activa": true
+    },
+    {
+      "nombre": "Iniciar sesión (02)",
+      "ruta": "/ingresar",
+      "limiteKb": null,
+      "activa": true
+    },
+    {
+      "nombre": "Registro de centro (05)",
+      "ruta": "/registro/centro",
+      "limiteKb": null,
+      "activa": true
+    },
+    {
+      "nombre": "Mapa (09), carga inicial con la lista y sin el mapa",
+      "ruta": "/mapa",
+      "limiteKb": 1024,
+      "activa": true,
+      "almacenamiento": {
+        "rm_invitado": "1",
+        "rm_zona": "{\"zonaId\":2,\"zonaNombre\":\"Centro de Juliaca\"}"
+      },
+      "bloquear": ["https://maps.googleapis.com/**", "https://maps.gstatic.com/**"]
+    },
+    {
+      "nombre": "Publicar material (12), primera visita",
+      "ruta": "/publicar",
+      "limiteKb": 1024,
+      "activa": true,
+      "almacenamiento": {
+        "rm_invitado": "1",
+        "rm_zona": "{\"zonaId\":1,\"zonaNombre\":\"Barrio Santa Rosa\"}"
+      },
+      "bloquear": ["https://maps.googleapis.com/**", "https://maps.gstatic.com/**"]
+    }
+  ]
+}

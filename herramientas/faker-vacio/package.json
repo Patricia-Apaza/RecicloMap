@@ -1,0 +1,8 @@
+{
+  "name": "@faker-js/faker",
+  "version": "0.0.0-sin-uso",
+  "private": true,
+  "description": "Sustituto vacío: Newman solo lo carga para las variables aleatorias de Postman, que la colección no usa",
+  "main": "index.js",
+  "exports": { ".": "./index.js", "./locale/en": "./locale/en.js" }
+}
